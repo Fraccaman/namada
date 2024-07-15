@@ -308,7 +308,7 @@ jobs:
     runs-on: [self-hosted, 8vcpu-16ram-ubuntu22-namada-x86]
     container: 
       image: ghcr.io/heliaxdev/namada-ci:namada-main
-    timeout-minutes: 40
+    timeout-minutes: 15
     needs: [build-wasm]
 
     steps:
