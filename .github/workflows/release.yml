@@ -28,6 +28,7 @@ jobs:
     runs-on: [ubuntu-latest]
     container: 
       image:  ghcr.io/heliaxdev/namada-ci:wasm-main
+      options: --user 1001
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
@@ -64,7 +65,11 @@ jobs:
       - name: Switch to tag if specified
         if: "${{ github.event.inputs.tag != '' }}"
         run: git checkout ${{ github.event.inputs.tag }}
-      - uses: cargo-bins/cargo-binstall@main
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get -y install libudev-dev protobuf-compiler pkg-config libssl-dev clang-tools clang
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
       - name: Install cargo-about
         run: cargo binstall cargo-about --no-confirm
       - name: Build release package for ${{ matrix.os }}
