@@ -43,7 +43,7 @@ jobs:
     - name: Upload wasm artifacts 
       uses: actions/upload-artifact@v4
       with:
-        name: wasm-${{ matrix.os }}-${{ github.sha }}
+        name: wasm-${{ github.sha }}
         path: |
           wasm/tx_*.wasm
           wasm/vp_*.wasm
@@ -51,6 +51,7 @@ jobs:
 
   binaries:
     runs-on: ${{ matrix.os }}
+    needs: [wasm]
     strategy:
       fail-fast: false
       matrix:
@@ -78,6 +79,11 @@ jobs:
           tool: cargo-binstall
       - name: Install cargo-about
         run: cargo binstall cargo-about --no-confirm
+      - name: Download wasm artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm-${{ github.sha }}
+          path: wasm
       - name: Build release package for ${{ matrix.os }}
         run: make package
       - name: Upload binaries package
@@ -87,7 +93,7 @@ jobs:
           path: ./*.tar.gz
 
   release:
-    needs: [binaries, wasm]
+    needs: [binaries]
     runs-on: [ubuntu-latest]
     if: always() && startsWith(github.ref, 'refs/tags/v') 
 
