@@ -33,6 +33,21 @@ env:
   NAMADA_MASP_PARAMS_DIR: /masp/.masp-params
 
 jobs:
+  changelog:
+    runs-on: [ubuntu-latest]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request_target' }}
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        if: ${{ github.event_name == 'pull_request_target' }}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Check changelog
+        run: sh .github/workflows/scripts/check-changelog.log
+
   lints:
     container: 
       image: ghcr.io/heliaxdev/namada-ci:namada-main
