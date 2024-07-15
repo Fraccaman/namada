@@ -60,7 +60,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Start sccache server
         id: sccache
         run: sccache --start-server
@@ -123,7 +122,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Build ${{ matrix.make.name }}
         run: make ${{ matrix.make.command }}
       - name: Upload ${{ matrix.make.name }} artifacts 
@@ -164,7 +162,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Duplicate checksums file
         run: cp wasm/checksums.json wasm/original-checksums.json
       - name: Download wasm artifacts
@@ -220,7 +217,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Start sccache server
         id: sccache
         run: sccache --start-server
@@ -238,11 +234,11 @@ jobs:
         run: cargo +${{ env.NIGHTLY }} llvm-cov nextest run -E 'not test(e2e) & not test(integration) & not test(pos_state_machine_test)' --features namada/testing --no-fail-fast
         env:
           RUSTFLAGS: "-C linker=clang -C link-arg=-fuse-ld=/usr/local/bin/mold"
-      # - name: Upload coverage
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     files: lcov.info
-      #     fail_ci_if_error: true
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: lcov.info
+          fail_ci_if_error: true
       - name: Clean cargo cache
         if: steps.cache.outputs.cache-hit != 'true'
         run: cargo cache --autoclean-expensive
@@ -278,7 +274,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Start sccache server
         id: sccache
         run: sccache --start-server
@@ -322,7 +317,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Start sccache server
         id: sccache
         run: sccache --start-server
@@ -377,7 +371,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Start sccache server
         id: sccache
         run: sccache --start-server
@@ -432,7 +425,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Start sccache server
         id: sccache
         run: sccache --start-server
@@ -502,7 +494,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Start sccache server
         id: sccache
         run: sccache --start-server

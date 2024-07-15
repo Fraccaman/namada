@@ -5,7 +5,7 @@
 
 set -e
 
-VERSION="$(git describe --dirty --broken || echo 'dryrun')"
+VERSION="$(git describe --dirty --broken || echo 'dryrun')" # running this in gh on a -rc branch will fail without the fallback
 PLATFORM="$(uname -s)-$(uname -m)"
 PACKAGE_NAME="namada-${VERSION}-${PLATFORM}"
 BIN="namada namadac namadan namadaw"
