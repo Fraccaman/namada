@@ -314,7 +314,7 @@ debug-wasm-tests-scripts:
 
 # need python
 checksum-wasm:
-	python3 wasm/checksums.py
+	python3 scripts/gen_checksums.py
 
 # this command needs wasm-opt installed
 opt-wasm:
@@ -328,7 +328,6 @@ opt-wasm:
 			fi; \
 		done; \
 	fi
-
 
 opt-wasm-tests:
 	@if command -v parallel >/dev/null 2>&1; then \

@@ -239,7 +239,8 @@ jobs:
           name: wasm-for-tests-${{ github.event.pull_request.head.sha|| github.sha }}
           path: wasm_for_tests
       - name: Run unit tests with coverage
-        run: cargo +${{ env.NIGHTLY }} llvm-cov nextest run -E 'not test(e2e) & not test(integration) & not test(pos_state_machine_test)' --features namada/testing --no-fail-fast --lcov --output-path lcov.info
+        run: make test-unit-with-coverage
+        # run: cargo +${{ env.NIGHTLY }} llvm-cov nextest run -E 'not test(e2e)' -E 'not test(integration)' -E 'not test(pos_state_machine_test)' --features namada/testing --no-fail-fast --lcov --output-path lcov.info
         env:
           RUSTFLAGS: "-C linker=clang -C link-arg=-fuse-ld=/usr/local/bin/mold"
       - name: Upload coverage
