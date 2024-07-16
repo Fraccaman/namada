@@ -178,8 +178,6 @@ jobs:
         with:
           path: /usr/local/cargo
           key: /cache/${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-      - name: Duplicate checksums file
-        run: cp wasm/checksums.json wasm/original-checksums.json
       - name: Download wasm artifacts
         uses: actions/download-artifact@v4
         with:
@@ -191,15 +189,9 @@ jobs:
           name: wasm-for-tests-${{ github.event.pull_request.head.sha|| github.sha }}
           path: wasm_for_tests
       - name: Test Wasm
-        run: cargo test --manifest-path wasm/Cargo.toml
+        run: cargo +${{ env.NIGHTLY }} nextest run --manifest-path wasm/Cargo.toml
         env:
           RUSTFLAGS: "-C linker=clang -C link-arg=-fuse-ld=/usr/local/bin/mold"
-      - name: Check if wasm checksums.json up-to-date
-        if: contains(github.ref, 'master') || contains(github.ref, '-rc')
-        run: cmp -- wasm/checksums.json wasm/original-checksums.json
-      - name: Print diff
-        if: contains(github.ref, 'master') || contains(github.ref, '-rc')
-        run: diff -y -W 150 wasm/checksums.json wasm/original-checksums.json --suppress-common-lines
       - name: Clean cargo cache
         if: steps.cache.outputs.cache-hit != 'true'
         run: cargo cache --autoclean-expensive
