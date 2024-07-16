@@ -25,6 +25,7 @@ target/
 
 # wasm artifacts
 wasm/*.wasm
+wasm/checksums.json
 
 # app version string file
 /crates/apps_lib/version.rs
