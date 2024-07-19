@@ -1,0 +1,39 @@
+queue_rules:
+    -   name: draft
+        speculative_checks: 3
+        batch_size: 3
+        queue_conditions:
+        - check-success = build-binaries
+        - check-success = lints
+        - check-success = test-unit
+        - check-success = test-integration
+        - check-success = test-e2e
+        - check-success = check-benchmarks
+        - check-success = check-packages
+        - check-success = build-binaries
+        - check-success = changelog
+        - "#approved-reviews-by >= 1"
+        - base = draft
+
+pull_request_rules:
+    -   name: automatic-merge
+        conditions:
+            - label = "ready-for-draft"
+            - check-success = build-binaries
+            - check-success = lints
+            - check-success = test-unit
+            - check-success = test-integration
+            - check-success = test-e2e
+            - check-success = check-benchmarks
+            - check-success = check-packages
+            - check-success = build-binaries
+            - check-success = build-wasm
+            - check-success = changelog
+            - "#approved-reviews-by >= 1"
+            - base = draft
+        actions:
+            merge:
+                method: merge
+
+
+    
